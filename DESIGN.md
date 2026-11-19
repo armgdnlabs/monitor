@@ -1,109 +1,124 @@
-# DESIGN.md — ARMGDN // LABS · FX tool
+# DESIGN.md — ARMGDN
 
-> Drop this file in the repo root and reference it from `CLAUDE.md`:
-> `Read DESIGN.md before touching any UI. Pull assets from the Figma file it links.`
+> Hand this file to Claude (or drop it in a repo root and point `CLAUDE.md` at it) when building any ARMGDN web app, tool, plugin UI or page.
+> It describes the language of the live site (armgdnlabs.github.io) and MONITOR. **When this file and an old Figma page disagree, this file wins.**
 
-## 1. The product in one line
-An open-source, browser-based FX engine for images and video (effect.app-class): **load media → stack effects as layers → tweak → export.** Built by ARMGDN // LABS. It should feel like **lab equipment, not a SaaS dashboard.**
+## 1. The brand in one breath
+ARMGDN is one brand: **Labs** (tools + plugins) and **Sounds** (kits, samples, bundles). The motto is *The Chaos to Create.*
 
-## 2. The feel
-**A brutalist monochrome shell with a CRT/terminal soul.**
-- **The shell** (chrome, panels, nav) is quiet: near-black, bone-white type, hairline borders, square corners and lots of air. It is wide-tracked serif for identity and monospace for everything functional.
-- **The instrument** (the canvas and the FX) is where the chaos lives: pixel, dither, scanline, bloom, glitch. The UI frames the chaos and never competes with it.
-- **Red is a signal, not a colour.** Use it only for live, recording, armed, active or destructive states, and for at most one thing on screen at a time.
-- **Motto, used sparingly:** *The Chaos to Create.*
+The look is **dark, editorial, tactile**. Huge tight grotesk type, bone-on-black, one signal red, soft glass surfaces, analog grain and dither. It should feel like a boutique audio-visual instrument maker. It is not a SaaS dashboard, and it is no longer the old brutalist/CRT terminal look.
 
-Reference points: a Game Boy boot screen, a rack-mounted synth, a 2001 file manager, an underground record label's catalogue sheet.
+- **Dark is the default.** Light ("bone") is a toggle, never an afterthought. Every surface must work in both.
+- **Red is a signal.** Use it for dots, pips, active values, the live state and one CTA per view. Never use it for large fills or decoration.
+- **Chaos lives in the content.** That means canvas, covers and dither fields. The chrome stays calm and rounded.
 
-## 3. Figma source of truth
-File: **ARMGDN — Brand System** · `https://www.figma.com/design/hB1ezCMW5DEn7Fryf1E1E9`
-Use the Figma MCP (`get_design_context`, `get_variable_defs`, `get_screenshot`) on these nodes. In URLs, swap `:` for `-`, e.g. `?node-id=16-5`.
+## 2. Figma source of truth
+File **ARMGDN — Brand System**: `https://www.figma.com/design/hB1ezCMW5DEn7Fryf1E1E9`. Use the Figma MCP (`get_variable_defs`, `get_design_context`, `get_screenshot`). In URLs `:` becomes `-` (e.g. `?node-id=40-34`).
 
-| What | Node | Use in the app |
+| What | Node | Notes |
 |---|---|---|
-| Foundations page (colour, type, spacing) | `1:2` | Tokens below |
-| Symbol (A + circle) | `2:8`, clean `2:14` | App icon, loader, empty states |
-| Wordmark | `2:25` | Top-left of the app bar |
-| Lock-ups (Labs/Header) | `15:150` | Splash, About, export watermark |
-| Tags `// LABS` set | `15:89` (Slash, Chip, Solid, Terminal, Pixel) | Layer types, badges, effect categories |
-| UI kit section | `16:4` | Terminal Window `16:5`, Progress `16:20`, Status Bar `16:40`, Button `16:56`, Knob `16:57`, Meter `16:63` |
-| Icons, 30 pixel icons | `10:56`–`10:143` | Toolbar and transport (play, pause, loop, record, folder, download, eye, lock, restart, terminal…) |
-| Pixel kit and patterns | `10:4` (Scanlines `10:144`, Dither `10:148`, Halftone `10:156`, Grid `10:158`) | Panel textures and default FX presets |
-| FX previews | `18:8` (CRT, LCD, Phosphor, Dither Halo, Glitch Cut) | Built-in preset thumbnails and the look of the canvas |
-| Badges | `16:80` Human Made, `16:104` Restart Sticker | About and export screens |
-| Applications page | `9:45` | Mockups for tone, not for literal layouts |
+| **System 2026 page** (start here) | `40:34` | Current tokens, type and components |
+| Components (masters) | `40:35` | Button `40:48` (Solid/Ghost/Red), Kick `40:52`, Tag `40:55`, Theme toggle `40:65`, Slider `40:66`, Knob `40:70`, Tabs `40:75`, Glass card `40:85` |
+| Specimen, dark / light | `40:91` / `40:192` | Visual reference for both modes |
+| Variables | collections **Primitives**, **Color** (modes Dark/Light), **Radius**, Spacing | WEB code syntax = the CSS custom properties below |
+| Text styles | Display/XL, Display/L, Heading/M, Heading/S, Body/L, Body/M, UI/Label, UI/Small, Motto/Italic, Mono/Tag, Mono/Body, Mono/Caption, Pixel/Tag | `Legacy/*` styles are retired |
+| Marks: symbol, wordmark, lock-ups | page `02 — Marks` (`1:3`), masters section `2:2`, guidelines `4:4` | Export as SVG, never redraw |
+| Pixel icons, dither/scanline patterns | page `04 — Graphic Kit` (`9:44`) | Icons at integer scales only |
+| ~~Foundations (legacy)~~ | `1:2` | Outdated: screen modes and VT323 display type. Don't use |
+| ~~Applications~~ | `9:45` | Work in progress. **Do not follow** |
 
-Export icons and marks as SVG. Don't redraw them, and don't swap in Lucide or Heroicons.
+## 3. Tokens
+Use these names verbatim as CSS custom properties. In Tailwind apps, expose them as space-separated RGB channels so alpha works (see MONITOR `src/index.css`).
 
-## 4. Tokens (mirror the Figma variables exactly)
-```css
-:root {                       /* Dark is the default theme */
-  --void:#0A0A0A; --ink:#1E1E1E; --ash-900:#262523; --ash-700:#4A4845;
-  --ash-500:#85827D; --ash-300:#BDB9B2; --bone-200:#EDE7DF; --bone:#F7F2EC;
-  --signal:#D3202A;
+### Primitives
+| Token | Hex | | Token | Hex |
+|---|---|---|---|---|
+| `--void` | `#0a0a0a` | | `--ash-300` | `#bdb9b2` |
+| `--ink` | `#1e1e1e` | | `--bone-200` | `#ede7df` |
+| `--ash-900` | `#262523` | | `--bone` | `#f7f2ec` |
+| `--ash-700` | `#4a4845` | | `--signal` | `#d3202a` |
+| `--ash-500` | `#85827d` | | `--signal-2` (hover/hot) | `#ff3b3b` |
 
-  --bg:var(--void); --bg-raised:var(--ash-900); --fg:var(--bone);
-  --fg-2:var(--ash-300); --fg-muted:var(--ash-500); --border:var(--ash-700);
+### Semantic (dark default → `[data-theme="light"]`)
+| Token | Dark | Light | Use |
+|---|---|---|---|
+| `--bg` | `#080808` | `--bone` | Page |
+| `--bg-2` | `#0f0f0e` | `--bone-200` | Raised cards, panels |
+| `--fg` | `--bone` | `--void` | Primary text, solid buttons |
+| `--fg-2` | `--ash-300` | `--ash-700` | Body / secondary |
+| `--muted` | `--ash-500` | `--ash-500` | Meta, `//` slashes |
+| `--line` | `#f7f2ec17` | `#0a0a0a17` | Hairlines, card edges |
+| `--line-2` | `#f7f2ec2e` | `#0a0a0a2e` | Stronger edges, ghost button |
+| `--glass` | `#f7f2ec0d` | `#0a0a0a08` | Glass fill |
+| `--glass-2` | `#f7f2ec17` | `#0a0a0a12` | Hover glow, toggle track |
+| well | `#00000059` | `#0c0c0c0d` | Slider tracks, segmented controls, inputs |
+| `--shadow` | `0 30px 60px -24px #000c` | `0 30px 60px -28px #0a0a0a55` | Floating only |
 
-  --s1:4px; --s2:8px; --s3:16px; --s4:24px; --s5:32px; --s6:48px; --s7:64px; --s8:96px; --s9:128px;
-  --radius:0;  --hair:1px solid var(--border);
-}
-[data-theme="light"] { --bg:var(--bone); --bg-raised:var(--bone-200); --fg:var(--void);
-  --fg-2:var(--ash-700); --border:var(--ash-300); }
+Theme switch: `data-theme` on `<html>`, persisted in `localStorage`, set by an inline head script before first paint (no flash). Colours transition `0.5s var(--ease)`.
 
-/* "Screen" modes apply to the canvas frame, scopes and meters only, never the shell */
-[data-screen="mono"]     { --scr-bg:#0A0A0A; --scr-ink:#F7F2EC; --scr-mid:#85827D; --scr-dim:#4A4845; }
-[data-screen="lcd"]      { --scr-bg:#0F380F; --scr-ink:#9BBC0F; --scr-mid:#8BAC0F; --scr-dim:#306230; }
-[data-screen="phosphor"] { --scr-bg:#0A0A0A; --scr-ink:#FF3B2F; --scr-mid:#B5241B; --scr-dim:#5C1612; }
-[data-screen="analog"]   { --scr-bg:#E9E1D3; --scr-ink:#1E1B17; --scr-mid:#5E574C; --scr-dim:#9C9385; }
-```
+### Shape and space
+- Radius: **card 22px** (`--r`), panel 16, cover 14, field 10, **pill 999**. Buttons, tabs, toggles and chips are always pills. Nothing in the chrome is square.
+- Gutter `clamp(16px, 4vw, 40px)`; content max-width 1320px; 4/8px spacing grid.
 
-## 5. Type
+## 4. Type
 | Role | Font | Spec |
 |---|---|---|
-| Identity / headings | **Tinos** (wide-tracked Roman serif) | UPPERCASE, tracking 0.12–0.5em, used rarely: splash, panel titles, empty states |
-| UI, labels, values, everything functional | **JetBrains Mono** | 11–14px. Labels UPPERCASE at +4–8% tracking. Numbers tabular |
-| Tags / badges | **Silkscreen** or Mono Medium | 12px UPPERCASE, `// LABS` style |
-| Screen readouts (timecode, FPS, status) | **VT323** | Inside the canvas frame or status bar only |
-| Easter eggs only | Doto, Sixtyfour, UnifrakturMaguntia | Never in core UI |
+| Display | **Archivo** SemiBold | `clamp(64px,14vw,230px)/0.84`, tracking −0.065em. Section `.h2`: `clamp(48px,8vw,128px)/0.88`, −0.055em |
+| Display parenthetical | Archivo Medium, `--signal` | `<sup>` at 0.13em, lowercase: **`Labs.(tools)`**, **`Monitor.(fx)`** |
+| UI / headings / body | **Archivo** 400–600 | UI 13px/600; panel headers 14–16px/600, −0.02em; body 15px/1.55 |
+| Numbers, values, tags | **JetBrains Mono** | Tags 11px/500, UPPERCASE, +0.14em, prefixed `// ` in `--muted`. All numeric readouts are mono (no jitter) |
+| Motto only | **Tinos** Italic | *The Chaos to Create.* and rare pull-quotes. Never UI |
+| Experimental flags | **Silkscreen** | Tiny cover/beta tags only |
 
-All are on Google Fonts. The `//` prefix is a typographic device: `// LAYERS`, `// EXPORT`, `// FX.DITHER`. Always use mono with a space after it, and set the slashes in `--fg-muted`.
+Google Fonts: `Archivo:wdth,wght@62..125,400..700`, `Tinos:ital@0;1`, `JetBrains+Mono:wght@400;500`, `Silkscreen`. Never use Inter, system-ui, VT323 or blackletter.
 
-## 6. Layout (desktop first; mobile is view and export only)
-```
-┌────────────────────────────────────────────────────────────────────┐
-│ [A◯] ARMGDN // LABS  FX        file  edit  view     ● REC   [EXPORT]│  app bar 40px, hairline bottom
-├──────────┬──────────────────────────────────────────┬──────────────┤
-│ // LAYERS│                                          │ // PARAMS    │
-│ ▣ SOURCE │            CANVAS (screen frame)          │ DITHER  ▸    │
-│ ▣ DITHER │   checkerboard → media, scanline overlay │ size  ▮▮▮▯ 4 │
-│ ▣ BLOOM  │   corner ticks, no rounded card          │ mix   ▮▮▯▯ 50│
-│ + ADD FX │                                          │ [knob][knob] │
-│ // PRESETS                                          │ // BLEND     │
-├──────────┴──────────────────────────────────────────┴──────────────┤
-│ ▶ ❚❚ ⟲  00:00:04:12 ─────────●──────────── 00:00:10:00   24FPS 2160²│  transport / timeline, VT323 readout
-└────────────────────────────────────────────────────────────────────┘
-```
-- Panels are 1px hairline boxes on `--bg`, not cards: no shadows, no rounding, no blur glass.
-- Panel headers are `// NAME` in mono caption, with an optional right-aligned count or status.
-- The canvas is the only thing allowed to glow. Wrap it in a "screen" frame with corner registration ticks and an optional scanline overlay toggle.
-- The status bar (`16:40`) shows resolution, fps, GPU, render time and a blinking `_` cursor when idle.
+## 5. Components (copy these patterns)
+- **Kick** `.kick`: 9px red dot + Archivo 600 13px. It is the header for sections, panels (`.slash` in MONITOR) and modals.
+- **Tag** `.tag`: `// LABEL` mono, as above.
+- **Button** `.btn`: 46px pill, padding `0 18px 0 22px`, gap 12, label + 8px red **pip**. Variants: solid (fg bg / bg text), `.ghost` (glass + inset 1px `--line-2` + blur 18px), `.red` (signal bg, bone pip). Hover: the label **rolls** up (two stacked spans, `translateY(-105%)`, 0.5s spring) and the pip scales 2.4×. Small/icon buttons are round 32–36px.
+- **Glass card** `.glass` / `.card`: radius 22, `--glass` fill, `inset 0 0 0 1px var(--line), inset 0 1px 0 var(--line-2)`, `backdrop-filter: blur(26px)`. `.card` adds a cursor-following radial glow (`--gx/--gy`, 420px, `--glass-2`).
+- **Theme toggle**: pill track (`--glass-2`, 1px `--line-2`); the knob is a **red ring** in both modes.
+- **Segmented tabs**: pill well; the active item is a solid `--fg` pill with `--bg` text.
+- **Slider**: 4px well track, red value fill, round `--fg` thumb (14px), mono value readout. Drag, wheel and arrow keys all work; Shift gives fine control; double-click resets.
+- **Knob**: 270° grey arc track, 3px red value arc, dot indicator. Drag vertically.
+- **Fields / menus**: field radius 10, well fill, 1px line; menus are glass cards with 6px item radius.
+- **Modal**: glass card at 94% panel opacity, blur 30, kick title, round close button, Esc/backdrop closes.
+- **Nav**: floating glass pill (Labs · Sounds · About) + theme toggle. The A symbol always links home.
+- **Ticker**: Archivo 600 13px items separated by 6px red dots; it speeds up with scroll velocity.
+- **Covers** (generated art for products): dithered 2-radial gradient per hue + 4px checker multiply + scanlines, Archivo name in `mix-blend-mode: difference`, Silkscreen tag.
 
-## 7. Components and behaviour
-- **Buttons:** rectangle, mono UPPERCASE. Primary is bone fill with void text. Secondary is a hairline outline. Danger and record use a `--signal` outline. Hover inverts. Press nudges 1px, with no transitions longer than 80ms.
-- **Sliders:** stepped block meters (`▮▮▮▯`) or a thin track with a square thumb. Show the value always, in mono. Drag, scroll and arrow keys all work, and Shift gives fine control.
-- **Knobs** (`16:57`) are for the 2–3 hero params per effect only.
-- **Layer rows:** eye icon, a `// TAG` chip for the effect type, name, and a drag handle `⋮⋮`. The selected row inverts (bone bg, void text).
-- **Loading:** use the symbol loops (L2 spinner, L3 buffer trail) from `_motion-v1/loops`, or a terminal progress bar `[████░░░░] 52%`. No generic spinners.
-- **Empty state:** the symbol, `DROP MEDIA OR PRESS O`, and *The Chaos to Create.* in Tinos tracked.
-- **Toasts** read like terminal lines: `> EXPORT COMPLETE — youndr_fx_0042.mp4 (12.4MB)`.
-- **Motion:** steps and snaps over eases. Use `steps()` for blinking or ticking, and 60–120ms linear for the rest. Respect `prefers-reduced-motion`.
-- **Texture:** apply a subtle grain or scanline only on large empty surfaces (splash, empty canvas) at ≤4% opacity. Never put it behind text you need to read.
+## 6. Motion
+- Eases: `--ease cubic-bezier(.22,.61,.36,1)` (default), `--spring cubic-bezier(.2,.9,.25,1)` (hover/press), `--expo cubic-bezier(.76,0,.24,1)` (reveals, wipes).
+- Reveals: `[data-reveal]` fades and rises 28px over 0.9s. Headline `.lines` slide up per line over 1.1s expo, staggered 70ms.
+- Loader: once per visit (session flag). The symbol stroke draws, a `000→100` mono counter runs, a red 1px bar fills, then a clip-path wipe up. It is skipped on later navigations.
+- Cursor (fine pointers only): 6px red dot + 38px ring that grows on links and fills with a label (`data-cursor="…"`).
+- Logo: lens/distortion **on hover only**. No idle animation on marks.
+- Smooth scroll: Lenis. Page transitions: Astro view transitions with the persisted header.
+- Always honour `prefers-reduced-motion`: kill animation and show the end state.
 
-## 8. Do / Don't
-**Do:** use hairlines, a strict 4/8 grid, monospace numbers, keyboard shortcuts shown inline (`[D] DUPLICATE`), honest technical readouts, and pixel icons at integer scales (1×, 2×, 3×) with `image-rendering: pixelated`.
+## 7. Texture
+- **Grain**: fixed full-screen SVG `feTurbulence` overlay (`body::after`), opacity ≈0.07 dark / 0.05 light (multiply), `steps(6)` jitter. Use CSS/SVG, not canvas, because canvas noise is blocked by Firefox fingerprinting protection.
+- **Dither field**: WebGL2 ordered-dither background (`noise` and `cone` modes) behind heroes, in muted ash with occasional red. Keep it slow and low contrast.
+- The app background may carry one faint signal-red radial glow top-left (≈8%).
 
-**Don't:** use rounded corners, gradients in the shell, drop shadows, emoji, purple or blue SaaS accents, red as decoration, Inter or system-ui, generic icon sets, or "friendly" illustration. Never distort, recolour or animate the A independently of the circle (the A and circle are locked).
+## 8. Plugins and native UIs (JUCE, VST/AU, desktop)
+Use the same tokens, rendered natively:
+- Background `--bg`, panels `--bg-2` with 1px `--line`, radius 16–22. Fake the glass with a flat 4–6% bone fill (no blur needed).
+- Knobs follow the Figma knob (`40:70`): grey 270° track, red value arc, dot. Value text in JetBrains Mono under the knob, label in Archivo 600.
+- Header: the A symbol at top-left (from Marks), the product as `Name.(type)` with a red parenthetical, and a dark/light toggle if the host allows.
+- Meters: thin rounded bars, ash with a red peak/clip. Bypass, power and record states are the only red fills.
+- Bundle fonts (all OFL): Archivo, JetBrains Mono, Tinos.
 
-## 9. Prompt to give Claude
-> Build the UI for an open-source browser FX tool (images + video, layer-based effects, export) following `DESIGN.md` exactly. Use the Figma MCP on file `hB1ezCMW5DEn7Fryf1E1E9`: pull variables from Foundations `1:2`, components from the UI kit `16:4`, icons `10:56`–`10:143`, tags `15:89`, and the wordmark `2:25`, and use the FX previews `18:8` as the visual target for the canvas and presets. Export assets as SVG; don't redraw them. Dark theme first. Start with the app shell (app bar, layers panel, canvas screen frame, params panel, transport and status bar), then screenshot it and compare against the Figma Applications page `9:45` before adding features.
+## 9. Do / Don't
+**Do:** use big tight grotesk headlines, generous space, pills and 22px cards, hairlines at 9% alpha, mono numbers, one red thing per view, real dark *and* light, hover-driven delight, and keyboard support.
+
+**Don't:** use square brutalist boxes, CRT/LCD "screen modes", VT323 or blackletter, Inter/system fonts, purple/blue accents, gradients in the chrome (outside covers and fields), heavy drop shadows on resting cards, emoji, generic icon sets (use the pixel icons or simple 1.5px strokes), red as decoration, or idle-animated logos. Never distort or recolour the A apart from its circle.
+
+## 10. Prompt to give Claude
+> Build this UI following `DESIGN.md` exactly. Pull tokens with the Figma MCP from file `hB1ezCMW5DEn7Fryf1E1E9`, page **00 — System 2026** (`40:34`): variables in the Color (Dark/Light) and Radius collections, components in `40:35`, specimens `40:91` (dark) and `40:192` (light). Export marks from page `1:3` as SVG and don't redraw them. Ignore the legacy Foundations (`1:2`) and Applications (`9:45`) pages. Dark by default with a light toggle (red-ring knob). Build the shell first, screenshot it in both themes, and compare against the specimens before adding features.
+
+## 11. MONITOR specifics
+- Wordmark `Monitor.(fx)` (`.wordmark`) opens About; the A symbol links to the ARMGDN home page; "by ARMGDN" sits bottom-left.
+- Tokens live in `src/index.css` as RGB channels; panels are `.glass-panel` (radius 16) with `.ph` red-dot headers. Use the existing classes (`.btn`, `.btn-primary`, `.btn-signal`, `.icon-btn`, `.tab`, `.seg`, `.field`, `.menu`, `.kbd`, `.tag*`, `.chip`, `.theme-toggle`) before inventing new ones.
+- The canvas is the only thing that glows. Effects and presets mirror effect.app (see `src/effects/`).
+- Marks are in `src/brand/Marks.tsx`, pixel icons in `src/brand/icons.ts`, both exported verbatim from Figma.
