@@ -97,7 +97,7 @@ Google Fonts: `Archivo:wdth,wght@62..125,400..700`, `Tinos:ital@0;1`, `JetBrains
 - Always honour `prefers-reduced-motion`: kill animation and show the end state.
 
 ## 7. Texture
-- **Grain**: fixed full-screen SVG `feTurbulence` overlay (`body::after`), opacity ≈0.07 dark / 0.05 light (multiply), `steps(6)` jitter. Use CSS/SVG, not canvas, because canvas noise is blocked by Firefox fingerprinting protection.
+- **Grain**: animated film grain at opacity ≈0.07 dark (screen) / 0.05 light (multiply). On the site it is a canvas tile redrawn every other frame (`src/scripts/site.ts`); MONITOR uses an SVG `feTurbulence` overlay. Canvas grain does not show in Firefox (fingerprinting protection), which is accepted.
 - **Dither field**: WebGL2 ordered-dither background (`noise` and `cone` modes) behind heroes, in muted ash with occasional red. Keep it slow and low contrast.
 - The app background may carry one faint signal-red radial glow top-left (≈8%).
 
